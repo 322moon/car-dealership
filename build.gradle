@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'jacoco'
 }
 
 group = 'org.example'
@@ -17,6 +18,12 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
@@ -64,6 +71,27 @@ tasks.named('processIntegrationTestResources') {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
 }
 
 test {
