@@ -10,10 +10,12 @@ import org.example.lab1.Domain.Entities.Sales.OrderInStock;
 import org.example.lab1.Domain.Entities.TestDrive;
 import org.example.lab1.Domain.Entities.Users.User;
 import org.example.lab1.Domain.repository.BaseRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 @AllArgsConstructor
 public class AdminService {
     private final BaseRepository<User, UUID> userRepo;
@@ -40,6 +42,7 @@ public class AdminService {
     public void deleteUser(UUID userId) {
         userRepo.deleteById(userId);
     }
+
 
     public void saveModel(Model model){
         validateNotNull(model, "Model");
@@ -80,6 +83,7 @@ public class AdminService {
         detailRepo.save(detail);
     }
 
+
     public Detail findDetailById(UUID detailId) {
         return detailRepo.findById(detailId);
     }
@@ -91,6 +95,7 @@ public class AdminService {
     public void deleteDetail(UUID detailId) {
         detailRepo.deleteById(detailId);
     }
+
 
     public void saveInStockOrder(OrderInStock order){
         validateNotNull(order, "OrderInStock");
@@ -147,4 +152,5 @@ public class AdminService {
         if (value == null) {
             throw new DomainValidationException(entityName + " cannot be null");
         }
-    }}
+    }
+}

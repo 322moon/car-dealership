@@ -8,7 +8,7 @@ import org.example.exception.DomainValidationExceptions.*;
 import org.example.lab1.Domain.Entities.Cars.ConfiguredModel;
 import org.example.lab1.Domain.ValueObjects.Price;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -22,7 +22,7 @@ public class ConfiguredCarOrder implements IOrder{
     private final ConfiguredModel configuredModel;
     private final UUID managerId;
     private final Price totalPrice;
-    private final LocalDateTime createdAt;
+    private final Instant createdAt;
     private ConfiguredOrderStatus status;
 
     public void approveByWarehouse(){
@@ -42,7 +42,7 @@ public class ConfiguredCarOrder implements IOrder{
                 model,
                 managerId,
                 model.getTotalPrice(),
-                LocalDateTime.now(),
+                Instant.now(),
                 ConfiguredOrderStatus.CREATED
         );
     }

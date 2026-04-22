@@ -23,7 +23,8 @@ import org.example.lab1.Domain.ValueObjects.Price;
 import org.example.lab1.Domain.repository.BaseRepository;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,14 +49,14 @@ public class TestDriveCatalogWarehouseAdminServicesTest {
 
         assertTrue(carRepo.findById(car.getId()).isAvailableForTestDrive());
 
-        TestDrive request = service.createRequest(customer.getId(), car.getId(), LocalDateTime.now().plusDays(1));
+        TestDrive request = service.createRequest(customer.getId(), car.getId(), Instant.now().plus(1, ChronoUnit.DAYS));
         assertEquals(1, testDriveRepo.findAll().size());
         assertFalse(request.isConfirm());
 
         service.confirmRequest(request.getId());
         assertTrue(testDriveRepo.findById(request.getId()).isConfirm());
 
-        service.remoceCarFromTestDriveList(car.getId());
+        service.removeCarFromTestDriveList(car.getId());
         assertFalse(carRepo.findById(car.getId()).isAvailableForTestDrive());
     }
 
@@ -75,7 +76,7 @@ public class TestDriveCatalogWarehouseAdminServicesTest {
 
         assertThrows(
                 DomainValidationExceptions.DomainValidationException.class,
-                () -> service.createRequest(manager.getId(), unavailableCar.getId(), LocalDateTime.now().plusDays(1))
+                () -> service.createRequest(manager.getId(), unavailableCar.getId(), Instant.now().plus(1, ChronoUnit.DAYS))
         );
     }
 
@@ -162,7 +163,7 @@ public class TestDriveCatalogWarehouseAdminServicesTest {
         ConfiguredModel configuredModel = new ConfiguredModel(model);
         configuredModel.setTotalPrice(Price.of(3_400_000));
         ConfiguredCarOrder configuredOrder = ConfiguredCarOrder.create(UUID.randomUUID(), configuredModel, UUID.randomUUID());
-        TestDrive testDrive = TestDrive.create(UUID.randomUUID(), car.getId(), LocalDateTime.now().plusDays(2));
+        TestDrive testDrive = TestDrive.create(UUID.randomUUID(), car.getId(), Instant.now().plus(2, ChronoUnit.DAYS));
 
         service.saveUser(user);
         service.saveModel(model);

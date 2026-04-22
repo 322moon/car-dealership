@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.example.exception.DomainValidationExceptions.*;
 import org.example.lab1.Domain.Entities.Cars.Car;
 import org.example.lab1.Domain.repository.BaseRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 @AllArgsConstructor
 public class CatalogService {
     private final BaseRepository<Car, UUID> carRepo;

@@ -7,18 +7,20 @@ import org.example.lab1.Domain.Entities.TestDrive;
 import org.example.lab1.Domain.Entities.Users.Role;
 import org.example.lab1.Domain.Entities.Users.User;
 import org.example.lab1.Domain.repository.BaseRepository;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 @AllArgsConstructor
 public class TestDriveService {
     private final BaseRepository<TestDrive, UUID> testDriveRepo;
     private final BaseRepository<Car, UUID> carRepo;
     private final BaseRepository<User, UUID> userRepo;
 
-    public TestDrive createRequest(UUID customerId, UUID carId, LocalDateTime startAt){
+    public TestDrive createRequest(UUID customerId, UUID carId, Instant startAt){
         User customer = userRepo.findById(customerId);
         if(!customer.getRoles().contains(Role.CUSTOMER)){
             throw new DomainValidationException("Only client can create test drive request");
@@ -56,7 +58,7 @@ public class TestDriveService {
         carRepo.save(updated);
     }
 
-    public void remoceCarFromTestDriveList(UUID carId){
+    public void removeCarFromTestDriveList(UUID carId){
         Car car = carRepo.findById(carId);
         Car updated = car.toBuilder()
                 .isAvailableForTestDrive(false)

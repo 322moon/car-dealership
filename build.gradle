@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
+    id 'org.springframework.boot' version '3.5.11'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'org.example'
@@ -17,39 +19,69 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.34'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
-    testImplementation 'org.testcontainers:postgresql:1.19.7'
-    testImplementation 'org.postgresql:postgresql:42.7.4'
-    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.13'
-}
-
 configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
     integrationTestImplementation.extendsFrom testImplementation
     integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 sourceSets {
     integrationTest {
-        java.srcDir file('src/integrationTest/java')
-        resources.srcDir file('src/integrationTest/resources')
+        java.setSrcDirs(['src/integrationTest/java'])
+        resources.setSrcDirs(['src/integrationTest/resources'])
         compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
         runtimeClasspath += output + compileClasspath
     }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
+
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    integrationTestImplementation 'org.testcontainers:junit-jupiter'
+    integrationTestImplementation 'org.testcontainers:postgresql'
+
+
 }
 
 idea {
     module {
         testSources.from sourceSets.integrationTest.java.srcDirs
         testResources.from sourceSets.integrationTest.resources.srcDirs
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    testLogging {
+        events 'passed', 'skipped', 'failed'
     }
 }
 
@@ -65,38 +97,19 @@ tasks.register('integrationTest', Test) {
     }
 }
 
-tasks.named('processIntegrationTestResources') {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+tasks.named('check') {
+    dependsOn tasks.named('integrationTest')
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-jacoco {
-    toolVersion = '0.8.12'
-}
-
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-    }
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        html.required = true
-        csv.required = false
-    }
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-    }
-}
+//jacoco {
+//    toolVersion = '0.8.12'
+//}
+//
+//jacocoTestReport {
+//    dependsOn test
+//    reports {
+//        xml.required = true
+//        html.required = true
+//        csv.required = false
+//    }
+//}

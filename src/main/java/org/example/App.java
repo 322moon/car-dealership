@@ -22,9 +22,11 @@ import org.example.lab1.Domain.ValueObjects.Price;
 import org.example.lab1.Domain.configurator.Configurator;
 import org.example.lab1.Domain.repository.BaseRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
+
 
 public final class App {
     private App(){
@@ -89,7 +91,7 @@ public final class App {
         System.out.println("\n=== Configured order ===");
         System.out.println(configuredOrder.getId() + " | " + configuredOrder.getStatus());
 
-        TestDrive request = testDriveService.createRequest(customer.getId(), car320.getId(), LocalDateTime.now().plusDays(1));
+        TestDrive request = testDriveService.createRequest(customer.getId(), car320.getId(), Instant.now().plus(1, ChronoUnit.DAYS));
         System.out.println("\n=== Test drive request ===");
         System.out.println(request.getId() + " | " + request.getTestDate());
     }

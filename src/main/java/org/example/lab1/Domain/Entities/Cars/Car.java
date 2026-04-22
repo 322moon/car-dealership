@@ -3,14 +3,16 @@ package org.example.lab1.Domain.Entities.Cars;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.lab1.Domain.Entities.Cars.CarCharacteristics.CarColor;
 import org.example.lab1.Domain.ValueObjects.Price;
 import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
-public class Car{
+public class Car {
 
     private UUID id;
     private Model model;

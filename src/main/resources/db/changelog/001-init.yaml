@@ -1,0 +1,717 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: user_roles
+            columnNames: user_id, role
+            constraintName: pk_user_roles
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_roles_user
+
+  - changeSet:
+      id: 002-create-details
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: details
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: detail_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: detail_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_in_stock
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_capacity
+                  type: FLOAT
+              - column:
+                  name: engine_power
+                  type: INT
+              - column:
+                  name: transmission_type
+                  type: VARCHAR(32)
+
+  - changeSet:
+      id: 003-create-models
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: models
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: base_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_brand
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fuel_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: drive_type
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transmission_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: wheels_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: steering_wheel_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interior_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: engine_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_models_engine
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: transmission_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_models_transmission
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: wheels_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_models_wheels
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: steering_wheel_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_models_steering_wheel
+        - addForeignKeyConstraint:
+            baseTableName: models
+            baseColumnNames: interior_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_models_interior
+
+  - changeSet:
+      id: 004-create-detail-compatible-models
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: detail_compatible_models
+            columns:
+              - column:
+                  name: detail_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: detail_compatible_models
+            columnNames: detail_id, model_id
+            constraintName: pk_detail_compatible_models
+        - addForeignKeyConstraint:
+            baseTableName: detail_compatible_models
+            baseColumnNames: detail_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_detail_compatible_models_detail
+        - addForeignKeyConstraint:
+            baseTableName: detail_compatible_models
+            baseColumnNames: model_id
+            referencedTableName: models
+            referencedColumnNames: id
+            constraintName: fk_detail_compatible_models_model
+
+  - changeSet:
+      id: 005-create-configured-models
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: configured_models
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: engine_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transmission_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: wheels_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: steering_wheel_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interior_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: model_id
+            referencedTableName: models
+            referencedColumnNames: id
+            constraintName: fk_configured_models_model
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: engine_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_configured_models_engine
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: transmission_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_configured_models_transmission
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: wheels_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_configured_models_wheels
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: steering_wheel_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_configured_models_steering_wheel
+        - addForeignKeyConstraint:
+            baseTableName: configured_models
+            baseColumnNames: interior_id
+            referencedTableName: details
+            referencedColumnNames: id
+            constraintName: fk_configured_models_interior
+
+  - changeSet:
+      id: 006-create-cars
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: cars
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: in_stock
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_available_for_test_drive
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cars
+            baseColumnNames: model_id
+            referencedTableName: models
+            referencedColumnNames: id
+            constraintName: fk_cars_model
+
+  - changeSet:
+      id: 007-create-orders
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: orders_in_stock
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: orders_in_stock
+            baseColumnNames: customer_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_orders_in_stock_customer
+        - addForeignKeyConstraint:
+            baseTableName: orders_in_stock
+            baseColumnNames: car_id
+            referencedTableName: cars
+            referencedColumnNames: id
+            constraintName: fk_orders_in_stock_car
+        - addForeignKeyConstraint:
+            baseTableName: orders_in_stock
+            baseColumnNames: manager_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_orders_in_stock_manager
+        - createTable:
+            tableName: configured_orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manager_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: configured_model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: configured_orders
+            columnNames: configured_model_id
+            constraintName: uq_configured_orders_configured_model
+        - addForeignKeyConstraint:
+            baseTableName: configured_orders
+            baseColumnNames: customer_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_configured_orders_customer
+        - addForeignKeyConstraint:
+            baseTableName: configured_orders
+            baseColumnNames: manager_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_configured_orders_manager
+        - addForeignKeyConstraint:
+            baseTableName: configured_orders
+            baseColumnNames: configured_model_id
+            referencedTableName: configured_models
+            referencedColumnNames: id
+            constraintName: fk_configured_orders_configured_model
+
+  - changeSet:
+      id: 008-create-test-drives
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: test_drives
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: test_date
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: confirmed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: test_drives
+            baseColumnNames: customer_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_test_drives_customer
+        - addForeignKeyConstraint:
+            baseTableName: test_drives
+            baseColumnNames: car_id
+            referencedTableName: cars
+            referencedColumnNames: id
+            constraintName: fk_test_drives_car
+
+  - changeSet:
+      id: 009-seed-data
+      author: 322moon
+      changes:
+        - sql:
+            splitStatements: true
+            stripComments: true
+            sql: |
+              INSERT INTO users (id, created_at, updated_at, removed, email, full_name) VALUES
+              ('00000000-0000-0000-0000-000000000101', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'customer@mail.ru', 'Ivan Petrov'),
+              ('00000000-0000-0000-0000-000000000102', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'manager@mail.ru', 'Olga Sidorova'),
+              ('00000000-0000-0000-0000-000000000103', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'warehouse@mail.ru', 'Warehouse Admin'),
+              ('00000000-0000-0000-0000-000000000104', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'sysadmin@mail.ru', 'System Admin');
+
+              INSERT INTO user_roles (user_id, role) VALUES
+              ('00000000-0000-0000-0000-000000000101', 'CUSTOMER'),
+              ('00000000-0000-0000-0000-000000000102', 'MANAGER'),
+              ('00000000-0000-0000-0000-000000000103', 'WAREHOUSE_ADMIN'),
+              ('00000000-0000-0000-0000-000000000104', 'SYSTEM_ADMIN');
+
+              INSERT INTO details (id, created_at, updated_at, removed, detail_type, detail_name, is_in_stock, price, engine_capacity, engine_power, transmission_type) VALUES
+              ('00000000-0000-0000-0000-000000000201', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'ENGINE', '2.0 Turbo 184hp', true, 250000.00, 2.0, 184, NULL),
+              ('00000000-0000-0000-0000-000000000202', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'ENGINE', '2.0 Turbo 258hp', true, 320000.00, 2.0, 258, NULL),
+              ('00000000-0000-0000-0000-000000000203', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'ENGINE', '3.0 Turbo 387hp', true, 450000.00, 3.0, 387, NULL),
+              ('00000000-0000-0000-0000-000000000211', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'TRANSMISSION', 'Automatic 8AT', true, 0.00, NULL, NULL, 'AT'),
+              ('00000000-0000-0000-0000-000000000212', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'TRANSMISSION', 'Manual 6MT', true, -30000.00, NULL, NULL, 'MT'),
+              ('00000000-0000-0000-0000-000000000213', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'TRANSMISSION', 'Automatic 8AT Sport', true, 100000.00, NULL, NULL, 'AT'),
+              ('00000000-0000-0000-0000-000000000221', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'WHEELS', '17'''' Standard', true, 0.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000222', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'WHEELS', '18'''' Aero', true, 45000.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000223', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'WHEELS', '19'''' M-Sport', true, 95000.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000231', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'STEERING_WHEEL', 'Sport Leather Standard', true, 0.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000232', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'STEERING_WHEEL', 'M-Sport Heated', true, 25000.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000241', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'INTERIOR', 'Fabric Graphite', true, 0.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000242', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'INTERIOR', 'Leather Dakota', true, 110000.00, NULL, NULL, NULL),
+              ('00000000-0000-0000-0000-000000000243', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'INTERIOR', 'Sport Performance', true, 160000.00, NULL, NULL, NULL);
+
+              INSERT INTO models (id, created_at, updated_at, removed, model_name, base_price, car_type, car_brand, fuel_type, drive_type, engine_id, transmission_id, wheels_id, steering_wheel_id, interior_id) VALUES
+              ('00000000-0000-0000-0000-000000000301', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'BMW 320i', 3200000.00, 'SEDAN', 'BMW', 'GASOLINE', 'RWD', '00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000211', '00000000-0000-0000-0000-000000000221', '00000000-0000-0000-0000-000000000231', '00000000-0000-0000-0000-000000000241'),
+              ('00000000-0000-0000-0000-000000000302', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'BMW 330i', 3850000.00, 'SEDAN', 'BMW', 'GASOLINE', 'RWD', '00000000-0000-0000-0000-000000000202', '00000000-0000-0000-0000-000000000211', '00000000-0000-0000-0000-000000000222', '00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000242'),
+              ('00000000-0000-0000-0000-000000000303', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, 'BMW M340i', 4700000.00, 'SEDAN', 'BMW', 'GASOLINE', 'AWD', '00000000-0000-0000-0000-000000000203', '00000000-0000-0000-0000-000000000213', '00000000-0000-0000-0000-000000000223', '00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000243');
+
+              INSERT INTO detail_compatible_models (detail_id, model_id) VALUES
+              ('00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000202', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000203', '00000000-0000-0000-0000-000000000303'),
+              ('00000000-0000-0000-0000-000000000211', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000211', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000212', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000212', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000213', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000213', '00000000-0000-0000-0000-000000000303'),
+              ('00000000-0000-0000-0000-000000000221', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000222', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000222', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000223', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000223', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000223', '00000000-0000-0000-0000-000000000303'),
+              ('00000000-0000-0000-0000-000000000231', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000231', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000303'),
+              ('00000000-0000-0000-0000-000000000241', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000242', '00000000-0000-0000-0000-000000000301'),
+              ('00000000-0000-0000-0000-000000000242', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000243', '00000000-0000-0000-0000-000000000302'),
+              ('00000000-0000-0000-0000-000000000243', '00000000-0000-0000-0000-000000000303');
+
+              INSERT INTO configured_models (id, created_at, updated_at, removed, model_id, total_price, engine_id, transmission_id, wheels_id, steering_wheel_id, interior_id) VALUES
+              ('00000000-0000-0000-0000-000000000401', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000301', 3380000.00, '00000000-0000-0000-0000-000000000201', '00000000-0000-0000-0000-000000000211', '00000000-0000-0000-0000-000000000222', '00000000-0000-0000-0000-000000000232', '00000000-0000-0000-0000-000000000242');
+
+              INSERT INTO cars (id, created_at, updated_at, removed, model_id, color, price, in_stock, is_available_for_test_drive) VALUES
+              ('00000000-0000-0000-0000-000000000501', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000301', 'BLACK', 3200000.00, true, true),
+              ('00000000-0000-0000-0000-000000000502', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000302', 'WHITE', 3850000.00, true, false),
+              ('00000000-0000-0000-0000-000000000503', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000303', 'BLUE', 4700000.00, false, false);
+
+              INSERT INTO orders_in_stock (id, created_at, updated_at, removed, customer_id, car_id, manager_id, total_price, status) VALUES
+              ('00000000-0000-0000-0000-000000000601', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000501', '00000000-0000-0000-0000-000000000102', 3200000.00, 'CREATED');
+
+              INSERT INTO configured_orders (id, created_at, updated_at, removed, customer_id, manager_id, configured_model_id, total_price, status) VALUES
+              ('00000000-0000-0000-0000-000000000701', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000102', '00000000-0000-0000-0000-000000000401', 3380000.00, 'CREATED');
+
+              INSERT INTO test_drives (id, created_at, updated_at, removed, customer_id, car_id, test_date, confirmed) VALUES
+              ('00000000-0000-0000-0000-000000000801', '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false, '00000000-0000-0000-0000-000000000101', '00000000-0000-0000-0000-000000000501', '2026-04-20T10:00:00Z', false);

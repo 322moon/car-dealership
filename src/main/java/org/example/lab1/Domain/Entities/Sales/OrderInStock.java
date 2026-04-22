@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.exception.DomainValidationExceptions.*;
 import org.example.lab1.Domain.ValueObjects.Price;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -19,7 +19,7 @@ public class OrderInStock implements IOrder{
     private UUID carId;
     private UUID managerId;
     private Price totalPrice;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private InStockOrderStatus status;
 
     public void approveByManager(){
@@ -40,7 +40,7 @@ public class OrderInStock implements IOrder{
                 carId,
                 managerId,
                 totalPrice,
-                LocalDateTime.now(),
+                Instant.now(),
                 InStockOrderStatus.CREATED
         );
     }

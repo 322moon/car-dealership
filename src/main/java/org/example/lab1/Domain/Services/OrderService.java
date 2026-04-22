@@ -8,10 +8,14 @@ import org.example.lab1.Domain.Entities.Cars.ConfiguredModel;
 import org.example.lab1.Domain.Entities.Sales.*;
 import org.example.lab1.Domain.Entities.Users.Role;
 import org.example.lab1.Domain.Entities.Users.User;
+import org.example.lab1.Domain.Result.Result;
 import org.example.lab1.Domain.ValueObjects.Price;
 import org.example.lab1.Domain.repository.BaseRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
+@Service
 @AllArgsConstructor
 public class OrderService {
     private BaseRepository<User, UUID> userRepo;
