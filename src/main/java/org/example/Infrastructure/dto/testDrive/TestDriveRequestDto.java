@@ -11,9 +11,6 @@ import java.util.UUID;
 @Setter
 public class TestDriveRequestDto {
     @NotNull
-    private UUID customerId;
-
-    @NotNull
     private UUID carId;
 
     @NotNull

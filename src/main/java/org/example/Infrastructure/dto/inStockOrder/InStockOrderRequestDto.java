@@ -10,8 +10,5 @@ import java.util.UUID;
 @Setter
 public class InStockOrderRequestDto {
     @NotNull
-    private UUID customerId;
-
-    @NotNull
     private UUID carId;
 }

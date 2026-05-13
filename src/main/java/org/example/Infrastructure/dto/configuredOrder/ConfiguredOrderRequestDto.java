@@ -12,9 +12,6 @@ import java.util.UUID;
 @Setter
 public class ConfiguredOrderRequestDto {
     @NotNull
-    private UUID customerId;
-
-    @NotNull
     private UUID modelId;
 
     @NotNull

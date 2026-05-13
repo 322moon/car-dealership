@@ -1,0 +1,133 @@
+{
+  "realm": "car-dealership",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "USER",
+        "description": "Car dealership customer"
+      },
+      {
+        "name": "MANAGER",
+        "description": "Car dealership manager"
+      },
+      {
+        "name": "WAREHOUSE_ADMIN",
+        "description": "Warehouse administrator"
+      },
+      {
+        "name": "ADMIN",
+        "description": "System administrator"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "car-dealership-api",
+      "name": "Car Dealership API",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "00000000-0000-0000-0000-000000000101",
+      "username": "customer",
+      "email": "customer@mail.ru",
+      "firstName": "Ivan",
+      "lastName": "Petrov",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000102",
+      "username": "manager",
+      "email": "manager@mail.ru",
+      "firstName": "Olga",
+      "lastName": "Sidorova",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "MANAGER"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000105",
+      "username": "customer2",
+      "email": "customer2@mail.ru",
+      "firstName": "Petr",
+      "lastName": "Ivanov",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000103",
+      "username": "warehouse",
+      "email": "warehouse@mail.ru",
+      "firstName": "Warehouse",
+      "lastName": "Admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "WAREHOUSE_ADMIN"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000104",
+      "username": "admin",
+      "email": "sysadmin@mail.ru",
+      "firstName": "System",
+      "lastName": "Admin",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ import org.example.lab1.Domain.Services.AdminService;
 import org.example.lab1.Domain.Services.CatalogService;
 import org.example.lab1.Domain.Services.WarehouseService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,17 +35,20 @@ public class CarController {
     private final CarDtoMapper carDtoMapper;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<CarResponseDto> findAll() {
         return carDtoMapper.toResponseDtoList(catalogService.findAvailableCars());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public CarResponseDto findById(@PathVariable UUID id) {
         return carDtoMapper.toResponseDto(catalogService.findCarById(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMIN', 'ADMIN')")
     public CarResponseDto create(@Valid @RequestBody CarRequestDto requestDto) {
         Model model = adminService.findModelById(requestDto.getModelId());
         Car car = carDtoMapper.toNewDomain(requestDto, model);
@@ -53,6 +57,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('WAREHOUSE_ADMIN', 'ADMIN')")
     public CarResponseDto update(@PathVariable UUID id, @Valid @RequestBody CarRequestDto requestDto) {
         warehouseService.findCarById(id);
         Model model = adminService.findModelById(requestDto.getModelId());
@@ -63,6 +68,7 @@ public class CarController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable UUID id) {
         adminService.deleteCar(id);
     }

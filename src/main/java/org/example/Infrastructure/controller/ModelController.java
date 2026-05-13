@@ -16,6 +16,7 @@ import org.example.lab1.Domain.Entities.Details.Transmission;
 import org.example.lab1.Domain.Entities.Details.Wheels;
 import org.example.lab1.Domain.Services.AdminService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,16 +31,19 @@ public class ModelController {
     private final ModelDtoMapper modelDtoMapper;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public List<ModelResponseDto> findAll(){
         return modelDtoMapper.toResponseDtoList(adminService.findAllModels());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ModelResponseDto findById(@PathVariable UUID id){
         return modelDtoMapper.toResponseDto(adminService.findModelById(id));
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("isAuthenticated()")
     public List<ModelResponseDto> findByFilter(
             @RequestParam(required = false) CarBrand brand,
             @RequestParam(required = false) UUID engineId,
@@ -60,6 +64,7 @@ public class ModelController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public ModelResponseDto create(@Valid @RequestBody ModelRequestDto modelRequestDto){
         Model model = modelDtoMapper.toNewDomain(modelRequestDto,
                 findDetail(modelRequestDto.getTransmissionId(), Transmission.class, "Transmission"),
@@ -72,6 +77,7 @@ public class ModelController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ModelResponseDto update(@PathVariable UUID id, @Valid @RequestBody ModelRequestDto modelRequestDto){
         adminService.findModelById(id);
         Model model = modelDtoMapper.toExistingDomain(id, modelRequestDto,
@@ -86,6 +92,7 @@ public class ModelController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable UUID id) {
         adminService.deleteModel(id);
     }
