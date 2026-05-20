@@ -1,4 +1,3 @@
-# Для сборки образа приложения
 FROM gradle:8.12-jdk21 AS build
 
 WORKDIR /app
@@ -7,15 +6,20 @@ COPY gradle gradle
 COPY gradlew .
 COPY build.gradle .
 COPY settings.gradle .
-COPY src src
+COPY common-events common-events
+COPY order-service order-service
+COPY storage-service storage-service
 
 RUN chmod +x gradlew
-RUN ./gradlew clean build -x test
+
+ARG SERVICE_MODULE
+RUN ./gradlew :${SERVICE_MODULE}:bootJar -x test
 
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /app/build/libs/*.jar app.jar
+ARG SERVICE_MODULE
+COPY --from=build /app/${SERVICE_MODULE}/build/libs/*.jar app.jar
 
-ENTRYPOINT ["java", "-cp", "app.jar", "org.example.App"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

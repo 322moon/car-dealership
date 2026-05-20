@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-stock-items
+      author: 322moon
+      changes:
+        - createTable:
+            tableName: stock_items
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: item_type
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reserved_quantity
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: removed
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: stock_items
+            columnNames: item_type, item_id
+            constraintName: uk_stock_items_type_item
+
+  - changeSet:
+      id: 002-seed-stock-items
+      author: 322moon
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO stock_items (id, item_type, item_id, quantity, reserved_quantity, created_at, updated_at, removed) VALUES
+              ('10000000-0000-0000-0000-000000000501', 'CAR', '00000000-0000-0000-0000-000000000501', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000502', 'CAR', '00000000-0000-0000-0000-000000000502', 2, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000201', 'DETAIL', '00000000-0000-0000-0000-000000000201', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000211', 'DETAIL', '00000000-0000-0000-0000-000000000211', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000221', 'DETAIL', '00000000-0000-0000-0000-000000000221', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000222', 'DETAIL', '00000000-0000-0000-0000-000000000222', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000231', 'DETAIL', '00000000-0000-0000-0000-000000000231', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000232', 'DETAIL', '00000000-0000-0000-0000-000000000232', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000241', 'DETAIL', '00000000-0000-0000-0000-000000000241', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false),
+              ('10000000-0000-0000-0000-000000000242', 'DETAIL', '00000000-0000-0000-0000-000000000242', 5, 0, '2026-04-19T00:00:00Z', '2026-04-19T00:00:00Z', false);

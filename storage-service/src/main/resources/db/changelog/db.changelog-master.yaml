@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/001-init-storage.yaml
+  - include:
+      file: db/changelog/002-outbox-inbox.yaml
+  - include:
+      file: db/changelog/003-stock-items.yaml
+  - include:
+      file: db/changelog/004-storage-catalog.yaml

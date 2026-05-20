@@ -1,1 +1,5 @@
-rootProject.name = 'java-template'
+rootProject.name = 'car-dealership'
+
+include 'common-events'
+include 'order-service'
+include 'storage-service'
