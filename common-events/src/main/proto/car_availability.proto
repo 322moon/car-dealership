@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package car.dealership.availability;
+
+option java_multiple_files = true;
+option java_package = "org.example.grpc";
+
+service CarAvailabilityService {
+  rpc GetAvailableCars(GetAvailableCarsRequest) returns (GetAvailableCarsResponse);
+  rpc GetAvailableCarById(GetAvailableCarByIdRequest) returns (AvailableCarResponse);
+}
+
+message GetAvailableCarsRequest {
+}
+
+message GetAvailableCarsResponse {
+  repeated AvailableCarResponse cars = 1;
+}
+
+message GetAvailableCarByIdRequest {
+  string id = 1;
+}
+
+message AvailableCarResponse {
+  string id = 1;
+  string model_id = 2;
+  string model_name = 3;
+  string brand = 4;
+  string color = 5;
+  string price = 6;
+}

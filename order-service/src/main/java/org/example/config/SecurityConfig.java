@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cars/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/cars/**", "/api/models/**", "/api/details/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/cars/**", "/api/details/**").hasAnyRole("WAREHOUSE_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/cars/**", "/api/details/**").hasAnyRole("WAREHOUSE_ADMIN", "ADMIN")

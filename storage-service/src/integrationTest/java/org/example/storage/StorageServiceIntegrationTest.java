@@ -1,5 +1,12 @@
 package org.example.storage;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
+import org.example.grpc.CarAvailabilityServiceGrpc;
+import org.example.grpc.GetAvailableCarByIdRequest;
+import org.example.grpc.GetAvailableCarsRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +21,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,6 +42,7 @@ class StorageServiceIntegrationTest {
         registry.add("spring.liquibase.enabled", () -> "true");
         registry.add("spring.kafka.bootstrap-servers", () -> "localhost:19092");
         registry.add("app.outbox.publish-delay-ms", () -> "600000");
+        registry.add("grpc.server.port", () -> "19090");
     }
 
     @Autowired
@@ -58,5 +67,44 @@ class StorageServiceIntegrationTest {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/assembly-orders", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void grpcServerShouldReturnAvailableCarsFromStorageDatabase() {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 19090)
+                .usePlaintext()
+                .build();
+        try {
+            var response = CarAvailabilityServiceGrpc.newBlockingStub(channel)
+                    .getAvailableCars(GetAvailableCarsRequest.newBuilder().build());
+
+            assertThat(response.getCarsList()).isNotEmpty();
+            assertThat(response.getCarsList()).allSatisfy(car -> {
+                assertThat(car.getId()).isNotBlank();
+                assertThat(car.getModelName()).isNotBlank();
+                assertThat(car.getPrice()).isNotBlank();
+            });
+        } finally {
+            channel.shutdownNow();
+        }
+    }
+
+    @Test
+    void grpcServerShouldReturnNotFoundForUnavailableCar() {
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 19090)
+                .usePlaintext()
+                .build();
+        try {
+            var request = GetAvailableCarByIdRequest.newBuilder()
+                    .setId("00000000-0000-0000-0000-000000000999")
+                    .build();
+
+            assertThatThrownBy(() -> CarAvailabilityServiceGrpc.newBlockingStub(channel).getAvailableCarById(request))
+                    .isInstanceOf(StatusRuntimeException.class)
+                    .extracting(exception -> ((StatusRuntimeException) exception).getStatus().getCode())
+                    .isEqualTo(Status.Code.NOT_FOUND);
+        } finally {
+            channel.shutdownNow();
+        }
     }
 }

@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'io.grpc:grpc-netty-shaded:1.68.1'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
@@ -42,12 +43,14 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationTestImplementation 'org.springframework.boot:spring-boot-testcontainers'
     integrationTestImplementation 'org.testcontainers:junit-jupiter'
     integrationTestImplementation 'org.testcontainers:postgresql'
     integrationTestImplementation 'org.testcontainers:kafka'
+    integrationTestImplementation 'org.springframework.security:spring-security-test'
 }
 
 idea {

@@ -33,3 +33,9 @@ spring:
     producer:
       properties:
         spring.json.add.type.headers: false
+
+grpc:
+  storage:
+    host: localhost
+    port: 9090
+    timeout-ms: 1000

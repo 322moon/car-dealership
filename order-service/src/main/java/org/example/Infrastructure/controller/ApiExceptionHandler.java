@@ -1,5 +1,7 @@
 package org.example.Infrastructure.controller;
 
+import org.example.Infrastructure.grpc.AvailableCarNotFoundException;
+import org.example.Infrastructure.grpc.StorageGrpcUnavailableException;
 import org.example.exception.BaseException;
 import org.example.exception.DomainValidationExceptions.DomainValidationException;
 import org.example.exception.NotFoundException.EntityNotFoundException;
@@ -18,6 +20,18 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleNotFound(EntityNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiErrorResponse("NOT_FOUND", exception.getMessage(), List.of()));
+    }
+
+    @ExceptionHandler(AvailableCarNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleAvailableCarNotFound(AvailableCarNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiErrorResponse("NOT_FOUND", exception.getMessage(), List.of()));
+    }
+
+    @ExceptionHandler(StorageGrpcUnavailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleStorageGrpcUnavailable(StorageGrpcUnavailableException exception) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ApiErrorResponse("STORAGE_SERVICE_UNAVAILABLE", exception.getMessage(), List.of()));
     }
 
     @ExceptionHandler({DomainValidationException.class, IllegalArgumentException.class, ClassCastException.class})

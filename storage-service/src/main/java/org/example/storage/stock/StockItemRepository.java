@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface StockItemRepository extends JpaRepository<StockItemJpaEntity, UUID> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<StockItemJpaEntity> findByItemTypeAndItemIdAndRemovedFalse(StockItemType itemType, UUID itemId);
+
+    Optional<StockItemJpaEntity> findFirstByItemTypeAndItemIdAndRemovedFalse(StockItemType itemType, UUID itemId);
 }
